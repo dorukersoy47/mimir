@@ -4,7 +4,7 @@ struct Home: View {
     var body: some View {
         NavigationStack {
             List(features) { FeatureLink(feature: $0) }
-                .navigationTitle("Mimir")
+                .navigationTitle("Mímir")
                 .toolbar {
                     NavigationLink { Settings() } label: {
                         Label("Settings", systemImage: "gearshape")
