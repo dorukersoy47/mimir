@@ -34,7 +34,11 @@ mimir/
         │   ├── HabitDetail.swift     # stats + history grid
         │   ├── HabitForm.swift       # add / edit
         │   └── HabitReminders.swift  # notifications
-        ├── Converter.swift
+        ├── Converter/
+        │   ├── Converter.swift            # feature entry, favorites, category list
+        │   ├── ConverterCategories.swift  # every category and its units
+        │   ├── ConverterScreen.swift      # From → To screen + unit picker
+        │   └── ConverterRates.swift       # currency rates download
         ├── Reviews.swift
         └── Places.swift
 ```
@@ -75,6 +79,18 @@ To remove a feature, delete the file and its entry in the list.
 - **Reminders:** optional time per habit; fires only on days the habit is still open. Scheduled up to a week ahead (iOS allows 64 pending) and refreshed whenever Habits is opened or changed.
 - **Archive:** swipe a habit to archive it. It's hidden and its reminders stop, but its history is kept under "Archived".
 - **Left out on purpose:** icons/colors, reordering, notes, a stats page, one-off to-dos.
+
+### Converter
+
+- **Categories:** Everyday (length, weight, temperature, volume, area, speed, duration), Money & Time (currency, time zones), More (data, energy, power, pressure, angle, fuel economy).
+- **Search** on the category list also matches units, currencies, and cities ("lira" → Currency, "Tokyo" → Time Zones).
+- **Screen:** From → To. Every unit picker is a searchable list. ⇅ swaps, ☆ favorites.
+- **Remembers** the last pair per category. The first two units in a category's list are its default pair.
+- **Units** use Apple's `Dimension` classes. Each unit has its own English name, which is also its saved id, so never rename one (Apple's own names repeat, e.g. US and UK fluid ounces).
+- **Currency:** European Central Bank rates via [Frankfurter](https://frankfurter.dev) (30 currencies, free, no key). Downloaded when Currency opens; the last rates are saved for offline use. This is the app's only network request, and it sends no user data.
+- **Time zones:** pick a time in one city and see it in another.
+- **Favorites:** a saved pair (category + two unit ids), listed at the top. Tapping one opens its category with that pair; swipe to remove.
+- **Left out on purpose:** typing sentences ("5 km in miles"), recents, reordering favorites.
 
 ## Workflow
 

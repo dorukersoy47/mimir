@@ -7,7 +7,7 @@ My personal assistant, as an iOS app. One app, many small tools, added one at a 
 | Feature   | Status  | What it does                                        |
 |-----------|---------|-----------------------------------------------------|
 | Habits    | Done    | Weekly goals, streaks, history, reminders, archive  |
-| Converter | Planned | Convert units, metrics, and more                    |
+| Converter | Done    | Units, currency, time zones, and more; favorites    |
 | Reviews   | Planned | Rate and review games, books, and films             |
 | Places    | Planned | Mark the places I've visited on a map (à la *Been*) |
 
@@ -43,7 +43,7 @@ A free account's install expires after **7 days**. Plug in and press ⌘R again;
 - [x] Planning & README
 - [x] App shell (home screen, feature list, Settings with on/off switches)
 - [x] Habits
-- [ ] Converter
+- [x] Converter
 - [ ] Reviews
 - [ ] Places
 - [ ] UI design pass
