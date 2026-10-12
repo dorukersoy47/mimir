@@ -16,34 +16,39 @@ struct HabitForm: View {
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Name", text: $habit.name)
-                HStack {
-                    TextField("Section (optional)", text: $habit.section)
-                    if !sections.isEmpty {
-                        Menu {
-                            ForEach(sections, id: \.self) { name in
-                                Button(name) { habit.section = name }
+                Section {
+                    TextField("Name", text: $habit.name)
+                    HStack {
+                        TextField("Section (optional)", text: $habit.section)
+                        if !sections.isEmpty {
+                            Menu {
+                                ForEach(sections, id: \.self) { name in
+                                    Button(name) { habit.section = name }
+                                }
+                            } label: {
+                                Image(systemName: "chevron.up.chevron.down")
                             }
-                        } label: {
-                            Image(systemName: "chevron.up.chevron.down")
                         }
                     }
-                }
-                Stepper(habit.goal, value: $habit.perWeek, in: 1...7)
-                Toggle("Reminder", isOn: Binding(
-                    get: { habit.reminder != nil },
-                    set: { on in
-                        habit.reminder = on ? Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: .now) : nil
-                        if on { HabitReminders.requestPermission() }
+                    Stepper(habit.goal, value: $habit.perWeek, in: 1...7)
+                    Toggle("Reminder", isOn: Binding(
+                        get: { habit.reminder != nil },
+                        set: { on in
+                            habit.reminder = on ? Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: .now) : nil
+                            if on { HabitReminders.requestPermission() }
+                        }
+                    ))
+                    if habit.reminder != nil {
+                        DatePicker("Time", selection: Binding(get: { habit.reminder ?? .now }, set: { habit.reminder = $0 }),
+                                   displayedComponents: .hourAndMinute)
                     }
-                ))
-                if habit.reminder != nil {
-                    DatePicker("Time", selection: Binding(get: { habit.reminder ?? .now }, set: { habit.reminder = $0 }),
-                               displayedComponents: .hourAndMinute)
                 }
+                .listRowBackground(Color.card)
             }
             .navigationTitle(isNew ? "New Habit" : "Edit Habit")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollContentBackground(.hidden)
+            .presentationBackground(.page)
             .toolbar {
                 if isNew {
                     ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }

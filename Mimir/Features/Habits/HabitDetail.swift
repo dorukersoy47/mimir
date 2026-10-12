@@ -14,6 +14,7 @@ struct HabitDetail: View {
                 LabeledContent("Streak", value: "🔥 " + habit.periods(habit.streak))
                 LabeledContent("Best", value: habit.periods(habit.bestStreak))
             }
+            .listRowBackground(Color.card)
             Section {
                 HabitHistory(habit: habit)
             } header: {
@@ -21,8 +22,10 @@ struct HabitDetail: View {
             } footer: {
                 Text("Tap a day to fix it.")
             }
+            .listRowBackground(Color.card)
         }
         .navigationTitle(habit.name)
+        .containerBackground(.page, for: .navigation)
         .toolbar { Button("Edit") { editing = true } }
         .sheet(isPresented: $editing) { HabitForm(habit: habit) }
     }
@@ -66,7 +69,7 @@ private struct HabitHistory: View {
 
     private func square(_ day: Date) -> some View {
         RoundedRectangle(cornerRadius: 4)
-            .fill(habit.isDone(on: day) ? Color.green : Color.secondary.opacity(0.2))
+            .fill(habit.isDone(on: day) ? Color.accent : Color.secondary.opacity(0.2))
             .overlay {
                 if cal.isDateInToday(day) { RoundedRectangle(cornerRadius: 4).stroke(.primary) }
             }

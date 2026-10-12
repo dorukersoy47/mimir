@@ -6,7 +6,7 @@
 - **No clutter.** No speculative code, no unused abstractions, no comments that restate the code.
 - **Features are independent.** A feature never knows another one exists.
 - **Apple-only stack.** SwiftUI + SwiftData, no third-party dependencies.
-- **Native UI first.** Use system components now; the design pass comes later.
+- **Native UI first.** Use system components, painted in the app's colors (see [Look](#look)).
 - **Privacy is a rule.** User data never leaves the device, except later to the user's own private iCloud. Web lookups send only what the lookup needs (e.g. search words). See [Privacy](README.md#privacy).
 
 ## Tech stack
@@ -23,10 +23,12 @@ mimir/
 ├── DEVELOPMENT.md
 ├── Mimir.xcodeproj
 └── Mimir/
-    ├── MimirApp.swift     # entry point, sets up storage
-    ├── Home.swift         # home screen: the list of features
+    ├── MimirApp.swift     # entry point, sets up storage and the look
+    ├── Tabs.swift         # the floating tab bar: Mímir + every feature
+    ├── Home.swift         # Mímir's tab: face, greeting, gear to Settings
+    ├── Theme.swift        # the two looks, serif titles, icon tiles
     ├── Features.swift     # the one list of features
-    ├── Settings.swift     # feature switches + each feature's own section
+    ├── Settings.swift     # look, feature switches + each feature's own section
     ├── Shared/            # code used by 2+ features (created when first needed)
     └── Features/
         ├── Habits/        # outgrew one file, so it's a folder
@@ -55,8 +57,8 @@ The `Mimir/` folder is synced with Xcode: any file added there on disk shows up 
 
 - One feature = one file in `Mimir/Features/`.
 - That file holds everything the feature needs: its data models, its screens, and its `Feature` entry (name, icon, data models, screen, and optionally its own section in Settings).
-- `Features.swift` is the only place that lists features. The home screen, Settings, and storage are built from it.
-- A feature that's turned off in Settings disappears from the home screen. Its data is kept, so turning it back on brings everything back.
+- `Features.swift` is the only place that lists features. The tab bar, Settings, and storage are built from it.
+- A feature that's turned off in Settings disappears from the tab bar. Its data is kept, so turning it back on brings everything back.
 - When a feature outgrows one file (~300 lines), it becomes a folder with the same name. File and type names must be unique across the app, so prefix them with the feature (`HabitForm`, not `Form`).
 - Code moves into `Shared/` only once two or more features actually need it.
 
@@ -72,6 +74,14 @@ To remove a feature, delete the file and its entry in the list.
 - Models stay iCloud-ready: every property has a default value, relationships are optional, and nothing is marked unique.
 - Adding a property with a default value is safe; existing data upgrades automatically. Renaming or removing a property needs a migration.
 - Small settings (like the feature switches) use `@AppStorage`, which is saved on the device.
+
+### Look
+
+- **Two looks**, picked in Settings → Appearance: **Dark Green** (the default) and **Beige**. Mímir sits in the middle of the tab bar in both.
+- **Colors** live in `Assets.xcassets`. Each has a light value (Beige) and a dark value (Dark Green); a look just switches the app to light or dark mode. `Page` is the background, `Card` the list rows, `Ink`/`InkSoft` the text, `AccentColor` the tint and Mímir's face, `Tile`/`Beige` the icon tiles.
+- **Every screen** gets `.containerBackground(.page, for: .navigation)`, and each list section gets `.listRowBackground(Color.card)`. Neither can be set once for the whole app.
+- **Sheets** use `.scrollContentBackground(.hidden)` and `.presentationBackground(.page)` instead, because app-wide settings don't reach them.
+- **Tab bar:** custom, because the system one can't be colored. It floats over the screens, and lists get extra bottom margin so they scroll past it.
 
 ## Features
 

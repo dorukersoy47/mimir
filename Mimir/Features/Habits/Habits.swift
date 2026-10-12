@@ -38,9 +38,11 @@ struct HabitList: View {
                     }
                 }
             }
+            .listRowBackground(Color.card)
             let archived = habits.count - active.count
             if archived > 0 {
                 Section { NavigationLink("Archived (\(archived))") { ArchivedHabits() } }
+                    .listRowBackground(Color.card)
             }
         }
         .overlay {
@@ -50,6 +52,7 @@ struct HabitList: View {
             }
         }
         .navigationTitle("Habits")
+        .containerBackground(.page, for: .navigation)
         .toolbar { Button("Add", systemImage: "plus") { newHabit = Habit() } }
         .sheet(item: $newHabit) { HabitForm(habit: $0, isNew: true) }
         .onChange(of: phase, initial: true) {
@@ -86,6 +89,7 @@ private struct ArchivedHabits: View {
     var body: some View {
         List(habits) { habit in
             NavigationLink(habit.name) { HabitDetail(habit: habit) }
+                .listRowBackground(Color.card)
                 .swipeActions {
                     Button("Unarchive", systemImage: "arrow.uturn.backward") {
                         habit.archived = false
@@ -96,6 +100,7 @@ private struct ArchivedHabits: View {
                 }
         }
         .navigationTitle("Archived")
+        .containerBackground(.page, for: .navigation)
     }
 }
 

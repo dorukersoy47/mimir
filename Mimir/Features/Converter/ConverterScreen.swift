@@ -44,6 +44,7 @@ struct ConverterScreen: View {
                 }
                 ConverterUnitPicker(title: "From", units: category.units, selection: $from)
             }
+            .listRowBackground(Color.card)
             Section {
                 Text(result)
                     .font(.title2)
@@ -54,8 +55,10 @@ struct ConverterScreen: View {
             } footer: {
                 if category.kind == .currency { Text(rates.note) }
             }
+            .listRowBackground(Color.card)
         }
         .navigationTitle(category.name)
+        .containerBackground(.page, for: .navigation)
         .toolbar {
             Button("Swap", systemImage: "arrow.up.arrow.down") { (from, to) = (to, from) }
             Button("Favorite", systemImage: favorite == nil ? "star" : "star.fill") {
@@ -119,13 +122,15 @@ private struct ConverterUnitList: View {
                 HStack {
                     LabeledContent(unit.name, value: unit.symbol)
                     Image(systemName: "checkmark")
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(.tint)
                         .opacity(unit.id == selection ? 1 : 0)
                 }
             }
-            .tint(.primary)
+            .tint(.ink)
+            .listRowBackground(Color.card)
         }
-        .searchable(text: $search)
+        .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always))
         .navigationBarTitleDisplayMode(.inline)
+        .containerBackground(.page, for: .navigation)
     }
 }

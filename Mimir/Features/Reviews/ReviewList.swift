@@ -31,6 +31,7 @@ struct ReviewList: View {
             }
             if showingToDo {
                 Section { ForEach(toDo) { ReviewRow(review: $0) } }
+                    .listRowBackground(Color.card)
             } else {
                 ForEach(theme.levels.indices, id: \.self) { level in
                     let rated = reviews.filter { $0.level == level }
@@ -38,6 +39,7 @@ struct ReviewList: View {
                         Section(theme.levels[level]) { ForEach(rated) { ReviewRow(review: $0) } }
                     }
                 }
+                .listRowBackground(Color.card)
             }
         }
         .overlay {
@@ -47,6 +49,7 @@ struct ReviewList: View {
             }
         }
         .navigationTitle(kind.name)
+        .containerBackground(.page, for: .navigation)
         .toolbar { Button("Add", systemImage: "plus") { adding = true } }
         .sheet(isPresented: $adding) { ReviewAdd(kind: kind) }
     }

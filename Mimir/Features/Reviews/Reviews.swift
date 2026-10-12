@@ -10,19 +10,38 @@ struct ReviewKinds: View {
     @Query private var reviews: [Review]
 
     var body: some View {
-        List(ReviewKind.all) { kind in
-            let mine = reviews.filter { $0.kind == kind.id }
-            let rated = mine.filter { $0.level != nil }.count
-            let counts = [rated > 0 ? "\(rated) reviewed" : nil, mine.count > rated ? "\(mine.count - rated) to \(kind.verb)" : nil]
-            NavigationLink { ReviewList(kind: kind) } label: {
-                LabeledContent {
-                    Text(counts.compactMap { $0 }.joined(separator: " · "))
-                } label: {
-                    Label(kind.name, systemImage: kind.icon)
+        ScrollView {
+            LazyVGrid(columns: [GridItem(spacing: 12), GridItem()], spacing: 12) {
+                ForEach(ReviewKind.all) { kind in
+                    let mine = reviews.filter { $0.kind == kind.id }
+                    let rated = mine.filter { $0.level != nil }.count
+                    let counts = [rated > 0 ? "\(rated) reviewed" : nil, mine.count > rated ? "\(mine.count - rated) to \(kind.verb)" : nil]
+                    NavigationLink { ReviewList(kind: kind) } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Image(systemName: kind.icon)
+                                .font(.title2)
+                                .foregroundStyle(.beige)
+                                .frame(width: 44, height: 44)
+                                .background(.tile, in: .rect(cornerRadius: 12))
+                            Spacer()
+                            Text(kind.name)
+                                .font(.system(.title2, design: .serif, weight: .semibold))
+                            Text(counts.compactMap { $0 }.joined(separator: "\n"))
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(height: 144)
+                        .padding()
+                        .background(.card, in: .rect(cornerRadius: 24))
+                    }
+                    .buttonStyle(.plain)
                 }
             }
+            .padding(.horizontal)
         }
         .navigationTitle("Reviews")
+        .containerBackground(.page, for: .navigation)
     }
 }
 

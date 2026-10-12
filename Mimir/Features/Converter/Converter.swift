@@ -41,7 +41,7 @@ struct ConverterList: View {
                                 opened = category
                             } label: {
                                 Label {
-                                    Text(names.joined(separator: " → ")).foregroundStyle(Color.primary)
+                                    Text(names.joined(separator: " → ")).foregroundStyle(.ink)
                                 } icon: {
                                     Image(systemName: category.icon)
                                 }
@@ -50,6 +50,7 @@ struct ConverterList: View {
                     }
                     .onDelete { $0.forEach { context.delete(favorites[$0]) } }
                 }
+                .listRowBackground(Color.card)
             }
             ForEach(groups, id: \.name) { group in
                 Section(group.name) {
@@ -60,12 +61,15 @@ struct ConverterList: View {
                     }
                 }
             }
+            .listRowBackground(Color.card)
         }
+        .labelStyle(.tile)
         .overlay {
             if groups.isEmpty { ContentUnavailableView.search(text: search) }
         }
-        .searchable(text: $search, prompt: "Units, currencies, cities")
+        .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always), prompt: "Units, currencies, cities")
         .navigationTitle("Converter")
+        .containerBackground(.page, for: .navigation)
         .navigationDestination(item: $opened) { ConverterScreen(category: $0) }
     }
 }

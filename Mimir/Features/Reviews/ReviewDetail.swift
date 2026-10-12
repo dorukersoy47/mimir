@@ -27,6 +27,7 @@ struct ReviewDetail: View {
                     }
                 }
             }
+            .listRowBackground(Color.card)
             Section("Rating") {
                 Picker("Rating", selection: level) {
                     Text("To \(ReviewKind.named(review.kind).verb.capitalized)").tag(Int?.none)
@@ -35,6 +36,7 @@ struct ReviewDetail: View {
                 .pickerStyle(.inline)
                 .labelsHidden()
             }
+            .listRowBackground(Color.card)
             if review.level != nil {
                 Section {
                     DatePicker("Finished", selection: Binding(get: { review.finished ?? .now }, set: { review.finished = $0 }),
@@ -42,8 +44,10 @@ struct ReviewDetail: View {
                     TextField("Your review", text: $review.text, axis: .vertical)
                         .lineLimit(4...)
                 }
+                .listRowBackground(Color.card)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .containerBackground(.page, for: .navigation)
     }
 }

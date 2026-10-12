@@ -45,8 +45,8 @@ A free account's install expires after **7 days**. Plug in and press ⌘R again;
 - [x] Habits
 - [x] Converter
 - [x] Reviews
+- [x] UI design pass (Dark Green and Beige looks, floating tab bar)
 - [ ] Places
-- [ ] UI design pass
 - [ ] Private iCloud sync
 
 ## Development

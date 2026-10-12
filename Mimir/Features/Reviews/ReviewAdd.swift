@@ -31,10 +31,12 @@ struct ReviewAdd: View {
                             }
                         }
                     }
-                    .tint(.primary)
+                    .tint(.ink)
                 }
+                .listRowBackground(Color.card)
                 if !search.isEmpty {
                     Button("Add “\(search)” yourself") { picked = Review(title: search, kind: kind) }
+                        .listRowBackground(Color.card)
                 }
             }
             .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search Wikipedia")
@@ -46,6 +48,8 @@ struct ReviewAdd: View {
             }
             .navigationTitle("Add \(kind.single)")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollContentBackground(.hidden)
+            .presentationBackground(.page)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
             }
