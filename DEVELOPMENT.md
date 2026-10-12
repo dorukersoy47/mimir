@@ -7,11 +7,12 @@
 - **Features are independent.** A feature never knows another one exists.
 - **Apple-only stack.** SwiftUI + SwiftData, no third-party dependencies.
 - **Native UI first.** Use system components now; the design pass comes later.
-- **Privacy is a rule.** User data never leaves the device, except later to the user's own private iCloud. See [Privacy](README.md#privacy).
+- **Privacy is a rule.** User data never leaves the device, except later to the user's own private iCloud. Web lookups send only what the lookup needs (e.g. search words). See [Privacy](README.md#privacy).
 
 ## Tech stack
 
 - SwiftUI, SwiftData, UserNotifications. No dependencies.
+- Web lookups (URLSession, no keys, no accounts): [Frankfurter](https://frankfurter.dev) for currency rates, Wikipedia for review search and covers.
 - Xcode 27 (Swift 6.4 compiler, Swift 5 language mode), iOS 27, iPhone only.
 
 ## Architecture
@@ -25,8 +26,8 @@ mimir/
     ├── MimirApp.swift     # entry point, sets up storage
     ├── Home.swift         # home screen: the list of features
     ├── Features.swift     # the one list of features
-    ├── Settings.swift     # turn features on/off
-    ├── Shared/            # code used by 2+ features (empty until needed)
+    ├── Settings.swift     # feature switches + each feature's own section
+    ├── Shared/            # code used by 2+ features (created when first needed)
     └── Features/
         ├── Habits/        # outgrew one file, so it's a folder
         │   ├── Habits.swift          # feature entry + list screen
@@ -39,7 +40,12 @@ mimir/
         │   ├── ConverterCategories.swift  # every category and its units
         │   ├── ConverterScreen.swift      # From → To screen + unit picker
         │   └── ConverterRates.swift       # currency rates download
-        ├── Reviews.swift
+        ├── Reviews/
+        │   ├── Reviews.swift       # feature entry, the four kinds, Settings section
+        │   ├── Review.swift        # data, kinds, rating themes
+        │   ├── ReviewList.swift    # one kind's tier list + to-do list
+        │   ├── ReviewDetail.swift  # rating, review, finished date
+        │   └── ReviewAdd.swift     # Wikipedia search
         └── Places.swift
 ```
 
@@ -48,7 +54,7 @@ The `Mimir/` folder is synced with Xcode: any file added there on disk shows up 
 ### How a feature works
 
 - One feature = one file in `Mimir/Features/`.
-- That file holds everything the feature needs: its data models, its screens, and its `Feature` entry (name, icon, data models, screen).
+- That file holds everything the feature needs: its data models, its screens, and its `Feature` entry (name, icon, data models, screen, and optionally its own section in Settings).
 - `Features.swift` is the only place that lists features. The home screen, Settings, and storage are built from it.
 - A feature that's turned off in Settings disappears from the home screen. Its data is kept, so turning it back on brings everything back.
 - When a feature outgrows one file (~300 lines), it becomes a folder with the same name. File and type names must be unique across the app, so prefix them with the feature (`HabitForm`, not `Form`).
@@ -87,10 +93,20 @@ To remove a feature, delete the file and its entry in the list.
 - **Screen:** From → To. Every unit picker is a searchable list. ⇅ swaps, ☆ favorites.
 - **Remembers** the last pair per category. The first two units in a category's list are its default pair.
 - **Units** use Apple's `Dimension` classes. Each unit has its own English name, which is also its saved id, so never rename one (Apple's own names repeat, e.g. US and UK fluid ounces).
-- **Currency:** European Central Bank rates via [Frankfurter](https://frankfurter.dev) (30 currencies, free, no key). Downloaded when Currency opens; the last rates are saved for offline use. This is the app's only network request, and it sends no user data.
+- **Currency:** European Central Bank rates via [Frankfurter](https://frankfurter.dev) (30 currencies, free, no key). Downloaded when Currency opens; the last rates are saved for offline use. It sends no user data.
 - **Time zones:** pick a time in one city and see it in another.
 - **Favorites:** a saved pair (category + two unit ids), listed at the top. Tapping one opens its category with that pair; swipe to remove.
 - **Left out on purpose:** typing sentences ("5 km in miles"), recents, reordering favorites.
+
+### Reviews
+
+- **Kinds:** Films, TV Shows, Books, Games. Each has its own tier list and its own to-do list (To Watch / To Read / To Play).
+- **Rating:** four levels, stored as a number (0 = best). The names come from the theme picked in Settings, so renaming never touches data.
+- **Themes:** Classic (Masterpiece, Great, Mid, Bad) and Minecraft (Netherite, Diamond, Iron, Dirt). Add one by adding a case to `ReviewTheme`; every theme has four levels.
+- **Adding:** + searches Wikipedia (the kind's word, e.g. "film", is added so the right page comes first). Picking a result fills title, description, and cover; "(2021 film)"-style suffixes are dropped. Nothing matches? Add it by hand.
+- **Finished date** is set when something is first rated; setting it back to "To Watch" clears it.
+- **Covers** are downloaded once and saved with the review. Only the search words go to Wikipedia. Some TV pages have a logo instead of a poster.
+- **Left out on purpose:** ranking within a level, custom cover photos, a mixed all-kinds view.
 
 ## Workflow
 

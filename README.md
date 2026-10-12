@@ -8,7 +8,7 @@ My personal assistant, as an iOS app. One app, many small tools, added one at a 
 |-----------|---------|-----------------------------------------------------|
 | Habits    | Done    | Weekly goals, streaks, history, reminders, archive  |
 | Converter | Done    | Units, currency, time zones, and more; favorites    |
-| Reviews   | Planned | Rate and review games, books, and films             |
+| Reviews   | Done    | Tier lists for films, TV, books, games; to-do lists |
 | Places    | Planned | Mark the places I've visited on a map (à la *Been*) |
 
 Every feature can be switched off in Settings. A switched-off feature is hidden, and its data is kept.
@@ -17,7 +17,7 @@ Every feature can be switched off in Settings. A switched-off feature is hidden,
 
 - **Your data stays yours.** Everything is saved on your iPhone (later, optionally, in your own private iCloud). No accounts, no servers, no analytics.
 - **Nothing is shared.** Everyone who installs Mimir has their own, completely separate data.
-- **The web is read-only.** Features may fetch public info (e.g. currency rates, film details, maps) but never upload your data.
+- **The web is read-only.** Features may look up public info (e.g. currency rates, or Wikipedia when adding a film) but never upload your data.
 
 ## Getting started
 
@@ -44,7 +44,7 @@ A free account's install expires after **7 days**. Plug in and press ⌘R again;
 - [x] App shell (home screen, feature list, Settings with on/off switches)
 - [x] Habits
 - [x] Converter
-- [ ] Reviews
+- [x] Reviews
 - [ ] Places
 - [ ] UI design pass
 - [ ] Private iCloud sync

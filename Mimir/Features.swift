@@ -6,6 +6,7 @@ struct Feature: Identifiable {
     let icon: String  // SF Symbol name
     var models: [any PersistentModel.Type] = []
     let view: AnyView
+    var settings: AnyView?  // the feature's own section in Settings, if it has one
 
     var id: String { name }
 
@@ -13,4 +14,4 @@ struct Feature: Identifiable {
     var isOn: AppStorage<Bool> { AppStorage(wrappedValue: true, "feature.\(id)") }
 }
 
-let features: [Feature] = [.habits, .converter]
+let features: [Feature] = [.habits, .converter, .reviews]

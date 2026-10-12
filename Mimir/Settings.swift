@@ -10,6 +10,7 @@ struct Settings: View {
             } footer: {
                 Text("Turned-off features are hidden. Their data is kept.")
             }
+            ForEach(features) { $0.settings }
         }
         .navigationTitle("Settings")
     }
