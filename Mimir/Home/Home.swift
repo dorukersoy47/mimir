@@ -25,6 +25,8 @@ struct Home: View {
             if let chat { messages(chat) } else { welcome }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(.rect)
+        .onTapGesture { typing = false }  // tap anywhere off the field to put the keyboard away
         .safeAreaInset(edge: .bottom) { input }
         .containerBackground(.page, for: .navigation)
         .toolbar {
