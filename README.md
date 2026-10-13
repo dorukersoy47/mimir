@@ -9,7 +9,7 @@ My personal assistant, as an iOS app. One app, many small tools, added one at a 
 | Habits    | Done    | Weekly goals, streaks, history, reminders, archive  |
 | Converter | Done    | Units, currency, time zones, and more; favorites    |
 | Reviews   | Done    | Tier lists for films, TV, books, games; to-do lists |
-| Places    | Planned | Mark the places I've visited on a map (à la *Been*) |
+| Places    | Done    | Tick the provinces I've been to; see it on a map    |
 
 Every feature can be switched off in Settings. A switched-off feature is hidden, and its data is kept.
 
@@ -46,7 +46,7 @@ A free account's install expires after **7 days**. Plug in and press ⌘R again;
 - [x] Converter
 - [x] Reviews
 - [x] UI design pass (Dark Green and Beige looks, floating tab bar)
-- [ ] Places
+- [x] Places
 - [ ] Private iCloud sync
 
 ## Development

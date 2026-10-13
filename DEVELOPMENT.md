@@ -13,6 +13,7 @@
 
 - SwiftUI, SwiftData, UserNotifications. No dependencies.
 - Web lookups (URLSession, no keys, no accounts): [Frankfurter](https://frankfurter.dev) for currency rates, Wikipedia for review search and covers.
+- Bundled data: provinces from [GeoNames](https://www.geonames.org) (CC BY 4.0, credited in the app) and country borders from [Natural Earth](https://www.naturalearthdata.com) (public domain), for Places.
 - Xcode 27 (Swift 6.4 compiler, Swift 5 language mode), iOS 27, iPhone only.
 
 ## Architecture
@@ -48,7 +49,11 @@ mimir/
         │   ├── ReviewList.swift    # one kind's tier list + to-do list
         │   ├── ReviewDetail.swift  # rating, review, finished date
         │   └── ReviewAdd.swift     # Wikipedia search
-        └── Places.swift
+        └── Places/
+            ├── Places.swift     # feature entry, country list, a country's provinces
+            ├── Place.swift      # data: visits, countries, provinces
+            ├── PlaceMap.swift   # the world map
+            └── Places.json      # every country's provinces and outline
 ```
 
 The `Mimir/` folder is synced with Xcode: any file added there on disk shows up in the project automatically.
@@ -117,6 +122,15 @@ To remove a feature, delete the file and its entry in the list.
 - **Finished date** is set when something is first rated; setting it back to "To Watch" clears it.
 - **Covers** are downloaded once and saved with the review. Only the search words go to Wikipedia. Some TV pages have a logo instead of a poster.
 - **Left out on purpose:** ranking within a level, custom cover photos, a mixed all-kinds view.
+
+### Places
+
+- **Provinces, not countries:** you tick the provinces you've been to (Turkey's 81 provinces, the US states, Germany's 16 states…). A country is **visited** once one province is ticked and **complete** once all are. A country with no provinces counts as its own single one.
+- **Map:** a flat world map drawn by the app. Countries are filled by progress: card colour (none yet), half accent (some), accent (complete). Tapping a country opens it.
+- **List:** every country, grouped by continent, with `3/81` once started and a seal once complete. Search matches countries and provinces.
+- **Data:** `Places.json` is bundled, so Places never goes online. It holds each country's provinces (GeoNames first-level divisions) and outline (Natural Earth 1:50m, Miller projection on a 2000 × 986 grid, simplified). Country names and continents come from Apple's `Locale`.
+- **Saved:** one `PlaceVisit` per ticked province, holding its GeoNames id (`TR.34`). When updating `Places.json`, keep the ids, or ticks are lost.
+- **Left out on purpose:** visit dates, notes, a wishlist, zooming the map, cities.
 
 ## Workflow
 

@@ -14,4 +14,4 @@ struct Feature: Identifiable {
     var isOn: AppStorage<Bool> { AppStorage(wrappedValue: true, "feature.\(id)") }
 }
 
-let features: [Feature] = [.habits, .converter, .reviews]
+let features: [Feature] = [.habits, .converter, .reviews, .places]
