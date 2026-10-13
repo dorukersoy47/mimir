@@ -7,6 +7,7 @@ struct Feature: Identifiable {
     var models: [any PersistentModel.Type] = []
     let view: AnyView
     var settings: AnyView?  // the feature's own section in Settings, if it has one
+    var summary: ((ModelContext) -> String)?  // the feature's data as text, for Mímir to read
 
     var id: String { name }
 

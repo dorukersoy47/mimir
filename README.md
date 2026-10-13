@@ -6,6 +6,7 @@ My personal assistant, as an iOS app. One app, many small tools, added one at a 
 
 | Feature   | Status  | What it does                                        |
 |-----------|---------|-----------------------------------------------------|
+| Mímir     | Done    | Chat with Mímir (on-device AI); he reads your data  |
 | Habits    | Done    | Weekly goals, streaks, history, reminders, archive  |
 | Converter | Done    | Units, currency, time zones, and more; favorites    |
 | Reviews   | Done    | Tier lists for films, TV, books, games; to-do lists |
@@ -18,6 +19,7 @@ Every feature can be switched off in Settings. A switched-off feature is hidden,
 - **Your data stays yours.** Everything is saved on your iPhone (later, optionally, in your own private iCloud). No accounts, no servers, no analytics.
 - **Nothing is shared.** Everyone who installs Mimir has their own, completely separate data.
 - **The web is read-only.** Features may look up public info (e.g. currency rates, or Wikipedia when adding a film) but never upload your data.
+- **Mímir thinks on your devices.** His AI runs on the iPhone itself (later also on your own PC). Your chats never go to an AI company.
 
 ## Getting started
 
@@ -26,6 +28,8 @@ Requires Xcode 27 and iOS 27.
 1. Clone the repo and open `Mimir.xcodeproj` in Xcode.
 2. Building your own copy? In the Mimir target's **Signing & Capabilities**, set **Team** to your own and change the **Bundle Identifier** (e.g. `com.yourname.Mimir`).
 3. Pick a simulator or your iPhone from the device menu at the top of the window, then press **⌘R**.
+
+Chatting with Mímir needs an iPhone with Apple Intelligence turned on (Settings → Apple Intelligence & Siri). The simulator borrows the Mac's model, so it can only chat if the Mac runs a matching macOS with Apple Intelligence on.
 
 ### Running on an iPhone with a free Apple ID
 
@@ -47,6 +51,8 @@ A free account's install expires after **7 days**. Plug in and press ⌘R again;
 - [x] Reviews
 - [x] UI design pass (Dark Green and Beige looks, floating tab bar)
 - [x] Places
+- [x] Mímir chat (Apple's on-device model, saved chats, reads your data)
+- [ ] Mímir on my own PC (Ollama + Tailscale), with the on-device model as the fallback
 - [ ] Private iCloud sync
 
 ## Development

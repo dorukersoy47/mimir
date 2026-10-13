@@ -11,7 +11,7 @@
 
 ## Tech stack
 
-- SwiftUI, SwiftData, UserNotifications. No dependencies.
+- SwiftUI, SwiftData, UserNotifications, FoundationModels (Apple's on-device AI). No dependencies.
 - Web lookups (URLSession, no keys, no accounts): [Frankfurter](https://frankfurter.dev) for currency rates, Wikipedia for review search and covers.
 - Bundled data: provinces from [GeoNames](https://www.geonames.org) (CC BY 4.0, credited in the app) and country borders from [Natural Earth](https://www.naturalearthdata.com) (public domain), for Places.
 - Xcode 27 (Swift 6.4 compiler, Swift 5 language mode), iOS 27, iPhone only.
@@ -26,7 +26,10 @@ mimir/
 └── Mimir/
     ├── MimirApp.swift     # entry point, sets up storage and the look
     ├── Tabs.swift         # the floating tab bar: Mímir + every feature
-    ├── Home.swift         # Mímir's tab: face, greeting, gear to Settings
+    ├── Home/              # Mímir's tab
+    │   ├── Home.swift       # face and greeting, then the chat; model picker, gear to Settings
+    │   ├── Chat.swift       # saved chats and the chat list
+    │   └── MimirMind.swift  # the AI model, Mímir's personality, the tool that reads features' data
     ├── Theme.swift        # the two looks, serif titles, icon tiles
     ├── Features.swift     # the one list of features
     ├── Settings.swift     # look, feature switches + each feature's own section
@@ -61,7 +64,7 @@ The `Mimir/` folder is synced with Xcode: any file added there on disk shows up 
 ### How a feature works
 
 - One feature = one file in `Mimir/Features/`.
-- That file holds everything the feature needs: its data models, its screens, and its `Feature` entry (name, icon, data models, screen, and optionally its own section in Settings).
+- That file holds everything the feature needs: its data models, its screens, and its `Feature` entry (name, icon, data models, screen, and optionally its own section in Settings and a `summary` of its data for Mímir to read).
 - `Features.swift` is the only place that lists features. The tab bar, Settings, and storage are built from it.
 - A feature that's turned off in Settings disappears from the tab bar. Its data is kept, so turning it back on brings everything back.
 - When a feature outgrows one file (~300 lines), it becomes a folder with the same name. File and type names must be unique across the app, so prefix them with the feature (`HabitForm`, not `Form`).
@@ -71,6 +74,7 @@ The `Mimir/` folder is synced with Xcode: any file added there on disk shows up 
 
 1. Create `Mimir/Features/Name.swift` with an `extension Feature { static let name = Feature(...) }`.
 2. Add `.name` to the list in `Features.swift`.
+3. Optional: pass `settings:` for its own Settings section, and `summary:` so Mímir can read its data.
 
 To remove a feature, delete the file and its entry in the list.
 
@@ -86,9 +90,20 @@ To remove a feature, delete the file and its entry in the list.
 - **Colors** live in `Assets.xcassets`. Each has a light value (Beige) and a dark value (Dark Green); a look just switches the app to light or dark mode. `Page` is the background, `Card` the list rows, `Ink`/`InkSoft` the text, `AccentColor` the tint and Mímir's face, `Tile`/`Beige` the icon tiles.
 - **Every screen** gets `.containerBackground(.page, for: .navigation)`, and each list section gets `.listRowBackground(Color.card)`. Neither can be set once for the whole app.
 - **Sheets** use `.scrollContentBackground(.hidden)` and `.presentationBackground(.page)` instead, because app-wide settings don't reach them.
-- **Tab bar:** custom, because the system one can't be colored. It floats over the screens, and lists get extra bottom margin so they scroll past it.
+- **Tab bar:** custom, because the system one can't be colored. It floats over the screens, and lists get extra bottom margin so they scroll past it. It hides while the keyboard is up, which would otherwise push it over text boxes.
 
 ## Features
+
+### Mímir (Home)
+
+- **Chat:** Home shows Mímir's face and a greeting until you ask something; then the chat takes over. Your messages sit in bubbles on the right; Mímir's replies are plain text (selectable, with **bold**/*italic*) and appear as he writes them. ■ stops an answer. ✎ starts a new chat, ☰ lists saved chats, titled by their first question (swipe to delete).
+- **Mind:** Apple's on-device model (FoundationModels): free, private, works offline. Needs an iPhone with Apple Intelligence turned on. Next: a bigger model on the user's PC (Ollama, reached over Tailscale), with the on-device model as the fallback.
+- **Model picker:** the model's name sits at the top of Home; tapping it lists the models (`MimirBrain`, saved in `@AppStorage`). Only Apple Intelligence for now; add a model by adding a case.
+- **Personality:** Mímir from the myths: guardian of the well under Yggdrasil, the head Odin kept alive for counsel. He speaks like an ancient, kindly sage with dry humour about being only a head, calls the user "seeker", and draws on the well, runes, Odin, the Nine Realms and Hávamál-style proverbs. He still answers plainly first and keeps it short. The text is in `MimirMind.personality`.
+- **Reading your data:** Mímir has one tool, `readMyData(section)`, which returns a feature's `summary` text. Only features that are switched on and have a `summary` (Habits, Reviews, Places) can be read. Read-only for now.
+- **Memory:** each chat is saved as plain messages. Opening a chat rebuilds the model's memory from them. If a chat grows past what the model can hold, Mímir keeps only the last exchange and tries again.
+- **Testing:** works on an iPhone 18 Pro. The iOS 27 simulator can't run the model on a Mac with an older macOS or with Apple Intelligence off ("no underlying assets" error), so test chat replies on the iPhone.
+- **Left out for now:** changing your data, searching chats, voice.
 
 ### Habits
 

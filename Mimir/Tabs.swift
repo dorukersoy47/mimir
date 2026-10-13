@@ -4,6 +4,7 @@ import SwiftUI
 struct Tabs: View {
     @AppStorage(Theme.key) private var theme = Theme.darkGreen
     @State private var selected = Feature.home.id
+    @State private var typing = false
 
     /// Mímir sits in the middle of the bar.
     private var tabs: [Feature] {
@@ -23,8 +24,10 @@ struct Tabs: View {
             }
         }
         .overlay(alignment: .bottom) {
-            bar.ignoresSafeArea(.keyboard)  // stays behind the keyboard
+            if !typing { bar }  // hidden while the keyboard is up, which would push it over text boxes
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in typing = true }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in typing = false }
         .preferredColorScheme(theme.scheme)  // here, not in MimirApp: there it stops switching back
     }
 

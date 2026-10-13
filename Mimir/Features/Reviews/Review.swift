@@ -49,3 +49,19 @@ enum ReviewTheme: String, CaseIterable {
         }
     }
 }
+
+extension Review {
+    /// Every title by kind and rating, plus what's still to watch/read/play, for Mímir.
+    static func summary(_ context: ModelContext) -> String {
+        let reviews = (try? context.fetch(FetchDescriptor<Review>(sortBy: [SortDescriptor(\.title)]))) ?? []
+        let theme = ReviewTheme(rawValue: UserDefaults.standard.string(forKey: ReviewTheme.key) ?? "") ?? .classic
+        let lines = ReviewKind.all.flatMap { kind in
+            let mine = reviews.filter { $0.kind == kind.id }
+            let groups = theme.levels.indices.map { level in (theme.levels[level], mine.filter { $0.level == level }) }
+                + [("To \(kind.verb)", mine.filter { $0.level == nil })]
+            return groups.filter { !$0.1.isEmpty }.map { "\(kind.name), \($0.0): \($0.1.map(\.title).joined(separator: ", "))" }
+        }
+        if lines.isEmpty { return "No reviews yet." }
+        return "Rating levels, best first: \(theme.levels.joined(separator: ", ")).\n" + lines.joined(separator: "\n")
+    }
+}

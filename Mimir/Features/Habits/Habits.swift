@@ -2,7 +2,8 @@ import SwiftUI
 import SwiftData
 
 extension Feature {
-    static let habits = Feature(name: "Habits", icon: "checkmark.circle", models: [Habit.self], view: AnyView(HabitList()))
+    static let habits = Feature(name: "Habits", icon: "checkmark.circle", models: [Habit.self], view: AnyView(HabitList()),
+                                summary: Habit.summary)
 }
 
 struct HabitList: View {

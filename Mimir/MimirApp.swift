@@ -11,6 +11,6 @@ import SwiftData
                 .tint(.accent)
                 .scrollContentBackground(.hidden)
         }
-        .modelContainer(for: features.flatMap(\.models))
+        .modelContainer(for: ([.home] + features).flatMap(\.models))
     }
 }

@@ -69,3 +69,16 @@ extension Habit {
     private func isMet(_ date: Date) -> Bool { isDaily ? isDone(on: date) : count(inWeekOf: date) >= perWeek }
     private func back(_ date: Date) -> Date { cal.date(byAdding: unit, value: -1, to: date)! }
 }
+
+extension Habit {
+    /// Every active habit's goal and progress, for Mímir.
+    static func summary(_ context: ModelContext) -> String {
+        let habits = (try? context.fetch(FetchDescriptor<Habit>(predicate: #Predicate { !$0.archived }))) ?? []
+        if habits.isEmpty { return "No habits yet." }
+        return habits.map { habit in
+            "\(habit.name): \(habit.goal.lowercased()), done \(habit.count(inWeekOf: .now))× this week, "
+                + "\(habit.isDone(on: .now) ? "done" : "not done") today, streak \(habit.periods(habit.streak)), best \(habit.periods(habit.bestStreak))"
+        }
+        .joined(separator: "\n")
+    }
+}

@@ -2,7 +2,8 @@ import SwiftUI
 import SwiftData
 
 extension Feature {
-    static let places = Feature(name: "Places", icon: "globe.europe.africa", models: [PlaceVisit.self], view: AnyView(PlaceList()))
+    static let places = Feature(name: "Places", icon: "globe.europe.africa", models: [PlaceVisit.self], view: AnyView(PlaceList()),
+                                summary: PlaceVisit.summary)
 }
 
 struct PlaceList: View {

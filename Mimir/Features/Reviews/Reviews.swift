@@ -3,7 +3,7 @@ import SwiftData
 
 extension Feature {
     static let reviews = Feature(name: "Reviews", icon: "star.bubble", models: [Review.self],
-                                 view: AnyView(ReviewKinds()), settings: AnyView(ReviewSettings()))
+                                 view: AnyView(ReviewKinds()), settings: AnyView(ReviewSettings()), summary: Review.summary)
 }
 
 struct ReviewKinds: View {

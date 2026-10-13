@@ -51,3 +51,20 @@ struct PlaceProvince: Decodable, Identifiable, Hashable {
     let id: String  // GeoNames code; a country without provinces is its own one
     let name: String
 }
+
+extension PlaceVisit {
+    /// Each started country's visited and missing provinces, for Mímir.
+    static func summary(_ context: ModelContext) -> String {
+        let visited = Set(((try? context.fetch(FetchDescriptor<PlaceVisit>())) ?? []).map(\.province))
+        let lines = PlaceCountry.all.compactMap { country -> String? in
+            let seen = country.provinces.filter { visited.contains($0.id) }.map(\.name)
+            let missing = country.provinces.filter { !visited.contains($0.id) }.map(\.name)
+            if seen.isEmpty { return nil }
+            if missing.isEmpty { return "\(country.name): complete, all \(seen.count) provinces" }
+            return "\(country.name): \(seen.count) of \(country.provinces.count) provinces. "
+                + "Visited: \(seen.joined(separator: ", ")). Not yet: \(missing.joined(separator: ", "))"
+        }
+        if lines.isEmpty { return "No places visited yet." }
+        return "Countries the user has been to (any other country: not visited):\n" + lines.joined(separator: "\n")
+    }
+}
